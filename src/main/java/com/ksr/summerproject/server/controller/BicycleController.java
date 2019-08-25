@@ -1,16 +1,11 @@
 package com.ksr.summerproject.server.controller;
 
-import com.ksr.summerproject.server.exceptions.BicycleDeactivatedException;
-import com.ksr.summerproject.server.exceptions.BicycleNotFoundException;
-import com.ksr.summerproject.server.exceptions.BicycleOccupiedException;
+import com.ksr.summerproject.server.exceptions.*;
 import com.ksr.summerproject.server.service.BicycleService;
 import com.ksr.summerproject.server.service.BicycleServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/bicycle")
@@ -22,8 +17,8 @@ public class BicycleController {
         this.bicycleService = bicycleService;
     }
 
-    @PostMapping("/rent/{id}")
-    public ResponseEntity<String> rentBicycle(@PathVariable("id") int id) {
+    @PostMapping("/rent")
+    public ResponseEntity<String> rentBicycle(@RequestParam("id") int id) {
         try {
             bicycleService.rentBicycle(id);
             return ResponseEntity.status(HttpStatus.OK).body("Succesfully rented bicycle of id: " + id);
@@ -36,5 +31,25 @@ public class BicycleController {
         }
     }
 
+    @PatchMapping("/return")
+    public ResponseEntity<String> returnBicycle(@RequestParam("id") int id) {
+        try {
+            bicycleService.returnBicycle(id);
+            return ResponseEntity.ok("Bicycle of id: " + id + " successfully returned.");
+        } catch (BicycleNotFoundException e) {
+            return ResponseEntity.ok(e.getMessage());
+        } catch (BicycleNotActiveException e) {
+            return ResponseEntity.ok(e.getMessage());
+        }
+    }
+
+    @GetMapping("/getnearby")
+    public ResponseEntity getNearbyBicycles(@RequestParam("location") int location) {
+        try {
+            return ResponseEntity.ok(bicycleService.getBicyclesInArea(location));
+        } catch (BicyclesNotFoundInLocationException e) {
+            return ResponseEntity.ok(e.getMessage());
+        }
+    }
 
 }

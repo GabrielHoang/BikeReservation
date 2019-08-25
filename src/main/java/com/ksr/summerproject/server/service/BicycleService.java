@@ -1,9 +1,6 @@
 package com.ksr.summerproject.server.service;
 
-import com.ksr.summerproject.server.exceptions.BicycleDeactivatedException;
-import com.ksr.summerproject.server.exceptions.BicycleNotFoundException;
-import com.ksr.summerproject.server.exceptions.BicycleOccupiedException;
-import com.ksr.summerproject.server.exceptions.BicyclesNotFoundInLocationException;
+import com.ksr.summerproject.server.exceptions.*;
 import com.ksr.summerproject.server.model.Bicycle;
 
 import java.util.List;
@@ -20,7 +17,7 @@ public interface BicycleService {
 
     Bicycle rentBicycle(int id) throws BicycleNotFoundException, BicycleDeactivatedException, BicycleOccupiedException;
 
-    void returnBicycle(int id) throws BicycleNotFoundException;
+    void returnBicycle(int id) throws BicycleNotFoundException, BicycleNotActiveException;
 
     void deactivateBicycle(int id) throws BicycleNotFoundException;
 

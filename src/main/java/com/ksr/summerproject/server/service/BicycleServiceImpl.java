@@ -1,9 +1,6 @@
 package com.ksr.summerproject.server.service;
 
-import com.ksr.summerproject.server.exceptions.BicycleDeactivatedException;
-import com.ksr.summerproject.server.exceptions.BicycleNotFoundException;
-import com.ksr.summerproject.server.exceptions.BicycleOccupiedException;
-import com.ksr.summerproject.server.exceptions.BicyclesNotFoundInLocationException;
+import com.ksr.summerproject.server.exceptions.*;
 import com.ksr.summerproject.server.model.Bicycle;
 import com.ksr.summerproject.server.repository.BicycleRepository;
 import org.springframework.stereotype.Service;
@@ -48,9 +45,12 @@ public class BicycleServiceImpl implements BicycleService {
     }
 
     @Override
-    public void returnBicycle(int id) throws BicycleNotFoundException {
+    public void returnBicycle(int id) throws BicycleNotFoundException, BicycleNotActiveException {
         Optional<Bicycle> bicycle = bicycleRepository.findById(id);
         if (bicycle.isPresent()) {
+            if (!bicycle.get().getStatus().equals(ACTIVE)) {
+                throw new BicycleNotActiveException("Bicycle has been already returned.");
+            }
             bicycle.get().setStatus(ACTIVE);
             bicycleRepository.save(bicycle.get());
         } else {
