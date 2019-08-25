@@ -2,13 +2,16 @@ package com.ksr.summerproject.server.service;
 
 import com.ksr.summerproject.server.exceptions.BicycleDeactivatedException;
 import com.ksr.summerproject.server.exceptions.BicycleNotFoundException;
+import com.ksr.summerproject.server.exceptions.BicycleOccupiedException;
 import com.ksr.summerproject.server.exceptions.BicyclesNotFoundInLocationException;
 import com.ksr.summerproject.server.model.Bicycle;
 import com.ksr.summerproject.server.repository.BicycleRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class BicycleServiceImpl implements BicycleService {
 
     private final BicycleRepository bicycleRepository;
@@ -27,11 +30,13 @@ public class BicycleServiceImpl implements BicycleService {
     }
 
     @Override
-    public Bicycle rentBicycle(int id) throws BicycleNotFoundException, BicycleDeactivatedException {
+    public Bicycle rentBicycle(int id) throws BicycleNotFoundException, BicycleDeactivatedException, BicycleOccupiedException {
         Optional<Bicycle> foundBicycle = bicycleRepository.findById(id);
         if (foundBicycle.isPresent()) {
             if (foundBicycle.get().getStatus().equals(DEACTIVATED)) {
                 throw new BicycleDeactivatedException("Bicycle of id: " + id + " is not available for rent.");
+            } else if (foundBicycle.get().getStatus().equals(OCCUPIED)) {
+                throw new BicycleOccupiedException("Bicycle of id: " + id + " already occupied");
             } else {
                 foundBicycle.get().setStatus(OCCUPIED);
                 bicycleRepository.save(foundBicycle.get());

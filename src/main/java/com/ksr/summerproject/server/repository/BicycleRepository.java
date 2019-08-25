@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BicycleRepository extends JpaRepository<Bicycle, Integer>, BicycleRepositoryCustom {
+public interface BicycleRepository extends JpaRepository<Bicycle, Integer> {
+    List<Bicycle> findBicyclesByLocationBetween(int startLocation, int endLocation);
 }

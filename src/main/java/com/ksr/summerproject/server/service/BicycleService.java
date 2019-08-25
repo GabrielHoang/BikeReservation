@@ -2,6 +2,7 @@ package com.ksr.summerproject.server.service;
 
 import com.ksr.summerproject.server.exceptions.BicycleDeactivatedException;
 import com.ksr.summerproject.server.exceptions.BicycleNotFoundException;
+import com.ksr.summerproject.server.exceptions.BicycleOccupiedException;
 import com.ksr.summerproject.server.exceptions.BicyclesNotFoundInLocationException;
 import com.ksr.summerproject.server.model.Bicycle;
 
@@ -17,7 +18,7 @@ public interface BicycleService {
 
     void addNewBicycle(int location, String status);
 
-    Bicycle rentBicycle(int id) throws BicycleNotFoundException, BicycleDeactivatedException;
+    Bicycle rentBicycle(int id) throws BicycleNotFoundException, BicycleDeactivatedException, BicycleOccupiedException;
 
     void returnBicycle(int id) throws BicycleNotFoundException;
 
