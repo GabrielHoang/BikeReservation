@@ -5,10 +5,12 @@ import com.ksr.summerproject.server.exceptions.ClientNotExistsException;
 import com.ksr.summerproject.server.exceptions.MoneyAccountOnDebtException;
 import com.ksr.summerproject.server.model.Client;
 import com.ksr.summerproject.server.repository.ClientRepository;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
+@Service
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
@@ -48,11 +50,13 @@ public class ClientServiceImpl implements ClientService {
     public void substractMoney(int clientId, BigDecimal money) throws ClientNotExistsException, MoneyAccountOnDebtException {
         Client client = getClient(clientId);
         BigDecimal clientsMoney;
+
         clientsMoney = client.getMoney().subtract(money);
         client.setMoney(clientsMoney);
         clientRepository.save(client);
+
         if (clientsMoney.doubleValue() < 0) {
-            throw new MoneyAccountOnDebtException("Account balance dropped below 0.00");
+            throw new MoneyAccountOnDebtException("Account balance in debt!");
         }
     }
 

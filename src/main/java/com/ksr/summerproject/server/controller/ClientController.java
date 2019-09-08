@@ -5,6 +5,8 @@ import com.ksr.summerproject.server.exceptions.ClientNotExistsException;
 import com.ksr.summerproject.server.exceptions.MoneyAccountOnDebtException;
 import com.ksr.summerproject.server.model.Client;
 import com.ksr.summerproject.server.service.ClientService;
+import com.ksr.summerproject.server.service.ClientServiceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,17 +18,17 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    public ClientController(ClientService clientService) {
+    public ClientController(ClientServiceImpl clientService) {
         this.clientService = clientService;
     }
 
     @PostMapping("/add")
-    ResponseEntity<String> addClient(@RequestParam("client") Client client) {
+    ResponseEntity<String> addClient(@RequestBody Client client) {
         try {
             clientService.addNewClient(client);
             return ResponseEntity.ok("Client successfully added.");
         } catch (ClientAlreadyExistsException e) {
-            return ResponseEntity.ok(e.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
     }
 
@@ -36,7 +38,7 @@ public class ClientController {
             Client foundClient = clientService.getClient(id);
             return ResponseEntity.ok(foundClient);
         } catch (ClientNotExistsException e) {
-            return ResponseEntity.ok(e.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
     }
 
@@ -47,10 +49,8 @@ public class ClientController {
             clientService.substractMoney(clientId, money);
             return ResponseEntity.ok("Amount of " + money + " has been succesfully substracted from the account.");
 
-        } catch (ClientNotExistsException e) {
-            return ResponseEntity.ok(e.getMessage());
-        } catch (MoneyAccountOnDebtException e) {
-            return ResponseEntity.ok(e.getMessage());
+        } catch (ClientNotExistsException | MoneyAccountOnDebtException e) {
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
     }
 
@@ -59,10 +59,19 @@ public class ClientController {
                             @PathVariable("amount")BigDecimal money) {
         try {
             clientService.addMoney(clientId, money);
-            return ResponseEntity.ok("Amount of " + money + "has been successfully added to the account.");
+            return ResponseEntity.ok("Amount of " + money + " has been successfully added to the account.");
 
         } catch (ClientNotExistsException e) {
-            return ResponseEntity.ok(e.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/getfunds")
+    ResponseEntity getFunds(@PathVariable("id") int clientId) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body("Current balance: " + clientService.getCurrentBalance(clientId));
+        } catch (ClientNotExistsException e) {
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
     }
 }

@@ -11,13 +11,13 @@ public class Client {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private int id;
   private String name;
   private String surname;
   private String email;
   private java.math.BigDecimal money;
 
-  @OneToOne(mappedBy = "client_id")
+  @OneToOne(mappedBy = "client")
   private Reservation reservation;
 
 }
