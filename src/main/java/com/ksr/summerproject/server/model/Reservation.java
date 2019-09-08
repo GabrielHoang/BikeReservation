@@ -16,10 +16,12 @@ public class Reservation {
 
   private java.sql.Timestamp reservationTime;
 
-  @OneToOne(mappedBy = "reservation")
+    @OneToOne
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
   private Client client;
 
-  @OneToOne(mappedBy = "reservation")
+    @OneToOne
+    @JoinColumn(name = "bicycle_id", referencedColumnName = "id")
   private Bicycle bicycle;
 
     public Reservation(Timestamp reservationTime, Client client_id, Bicycle bicycle_id) {

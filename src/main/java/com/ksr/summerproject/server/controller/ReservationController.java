@@ -22,7 +22,7 @@ public class ReservationController {
         try {
             reservationService.create(clientId, bicycleId);
             return ResponseEntity.ok("Reservation successfull.");
-        } catch (ClientNotExistsException | BicycleOccupiedException | BicycleDeactivatedException | BicycleNotFoundException e) {
+        } catch (ClientNotExistsException | BicycleOccupiedException | BicycleDeactivatedException | BicycleNotFoundException | ClientAlreadyHasReservation e) {
             return ResponseEntity.ok(e.getMessage());
         }
     }
@@ -33,7 +33,7 @@ public class ReservationController {
         try {
             reservationService.finish(clientId, bicycleId);
             return ResponseEntity.ok("Reservation successfully finished.");
-        } catch (BicycleNotOccupiedException | BicycleNotFoundException | ClientNotExistsException e) {
+        } catch (BicycleNotOccupiedException | BicycleNotFoundException | ClientNotExistsException | ClientHasNoReservationException e) {
             return ResponseEntity.ok(e.getMessage());
         }
     }

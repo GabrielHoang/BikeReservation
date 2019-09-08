@@ -21,5 +21,7 @@ public interface BicycleService {
 
     void deactivateBicycle(int id) throws BicycleNotFoundException;
 
+    Bicycle getBicycle(int id) throws BicycleNotFoundException;
+
     List<Bicycle> getBicyclesInArea(int location) throws BicyclesNotFoundInLocationException;
 }

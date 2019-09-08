@@ -25,21 +25,28 @@ public class ReservationServiceImpl implements ReservationService {
 
 
     @Override
-    public void create(int clientId, int bicycleId) throws ClientNotExistsException, BicycleOccupiedException, BicycleDeactivatedException, BicycleNotFoundException {
+    public void create(int clientId, int bicycleId) throws ClientNotExistsException, BicycleOccupiedException, BicycleDeactivatedException, BicycleNotFoundException, ClientAlreadyHasReservation {
         Client foundClient = clientService.getClient(clientId);
         Bicycle foundBicycle = bicycleService.rentBicycle(bicycleId);
 
+        if (foundClient.getReservation() != null) {
+            throw new ClientAlreadyHasReservation("Client already has a reservation. Bicycle cannot be rented!");
+        }
+
         Reservation reservation = new Reservation(java.sql.Timestamp.valueOf(LocalDateTime.now()),
                 foundClient, foundBicycle);
-
-        foundBicycle.setReservation(reservation);
-        foundClient.setReservation(reservation);
 
         reservationRepository.save(reservation);
     }
 
     @Override
-    public void finish(int clientId, int bicycleId) throws BicycleNotOccupiedException, BicycleNotFoundException, ClientNotExistsException {
+    public void finish(int clientId, int bicycleId) throws BicycleNotOccupiedException, BicycleNotFoundException, ClientNotExistsException, ClientHasNoReservationException {
+        Client foundClient = clientService.getClient(clientId);
+
+        if (foundClient.getReservation() == null) {
+            throw new ClientHasNoReservationException("Client currently has no reservations");
+        }
+
         bicycleService.returnBicycle(bicycleId);
 
         Reservation foundReservation = reservationRepository.findByClient_idAndBicycle_id(clientId, bicycleId);

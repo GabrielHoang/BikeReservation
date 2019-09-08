@@ -70,6 +70,16 @@ public class BicycleServiceImpl implements BicycleService {
     }
 
     @Override
+    public Bicycle getBicycle(int id) throws BicycleNotFoundException {
+        Optional<Bicycle> bicycle = bicycleRepository.findById(id);
+        if (bicycle.isPresent()) {
+            return bicycle.get();
+        } else {
+            throw new BicycleNotFoundException("Bicycle of id: " + id + " not found.");
+        }
+    }
+
+    @Override
     public List<Bicycle> getBicyclesInArea(int location) throws BicyclesNotFoundInLocationException {
         List<Bicycle> bicycleList = bicycleRepository.findBicyclesByLocationBetween(location-1,location+1);
         if (bicycleList.size() == 0) {
