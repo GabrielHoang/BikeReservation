@@ -17,6 +17,7 @@ public class Bicycle {
 
   private int location;
 
-  @OneToOne(mappedBy = "bicycle")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "reservation_id", referencedColumnName = "id")
     private Reservation reservation;
 }

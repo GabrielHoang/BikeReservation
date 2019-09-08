@@ -17,7 +17,8 @@ public class Client {
   private String email;
   private java.math.BigDecimal money;
 
-  @OneToOne(mappedBy = "client")
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "reservation_id", referencedColumnName = "id")
   private Reservation reservation;
 
 }

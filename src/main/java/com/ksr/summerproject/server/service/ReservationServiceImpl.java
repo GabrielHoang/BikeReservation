@@ -32,6 +32,9 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = new Reservation(java.sql.Timestamp.valueOf(LocalDateTime.now()),
                 foundClient, foundBicycle);
 
+        foundBicycle.setReservation(reservation);
+        foundClient.setReservation(reservation);
+
         reservationRepository.save(reservation);
     }
 
