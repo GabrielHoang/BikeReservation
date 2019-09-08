@@ -1,7 +1,8 @@
 package com.ksr.summerproject.server.exceptions;
 
-public class BicycleNotActiveException extends Exception {
-    public BicycleNotActiveException(String message) {
+public class BicycleNotOccupiedException extends Exception {
+    public BicycleNotOccupiedException(String message) {
+        super(message);
     }
 
     @Override

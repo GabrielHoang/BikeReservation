@@ -45,11 +45,11 @@ public class BicycleServiceImpl implements BicycleService {
     }
 
     @Override
-    public void returnBicycle(int id) throws BicycleNotFoundException, BicycleNotActiveException {
+    public void returnBicycle(int id) throws BicycleNotFoundException, BicycleNotOccupiedException {
         Optional<Bicycle> bicycle = bicycleRepository.findById(id);
         if (bicycle.isPresent()) {
-            if (!bicycle.get().getStatus().equals(ACTIVE)) {
-                throw new BicycleNotActiveException("Bicycle has been already returned.");
+            if (!bicycle.get().getStatus().equals(OCCUPIED)) {
+                throw new BicycleNotOccupiedException("Bicycle has been already returned.");
             }
             bicycle.get().setStatus(ACTIVE);
             bicycleRepository.save(bicycle.get());

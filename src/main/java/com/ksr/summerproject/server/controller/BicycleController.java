@@ -22,11 +22,7 @@ public class BicycleController {
         try {
             bicycleService.rentBicycle(id);
             return ResponseEntity.status(HttpStatus.OK).body("Succesfully rented bicycle of id: " + id);
-        } catch (BicycleNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
-        } catch (BicycleDeactivatedException e) {
-            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
-        } catch (BicycleOccupiedException e) {
+        } catch (BicycleNotFoundException | BicycleDeactivatedException | BicycleOccupiedException e) {
             return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
     }
@@ -35,11 +31,9 @@ public class BicycleController {
     public ResponseEntity<String> returnBicycle(@RequestParam("id") int id) {
         try {
             bicycleService.returnBicycle(id);
-            return ResponseEntity.ok("Bicycle of id: " + id + " successfully returned.");
-        } catch (BicycleNotFoundException e) {
-            return ResponseEntity.ok(e.getMessage());
-        } catch (BicycleNotActiveException e) {
-            return ResponseEntity.ok(e.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body("Bicycle of id: " + id + " successfully returned.");
+        } catch (BicycleNotFoundException | BicycleNotOccupiedException e) {
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
     }
 
@@ -48,7 +42,7 @@ public class BicycleController {
         try {
             return ResponseEntity.ok(bicycleService.getBicyclesInArea(location));
         } catch (BicyclesNotFoundInLocationException e) {
-            return ResponseEntity.ok(e.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
     }
 

@@ -17,6 +17,6 @@ public class Bicycle {
 
   private int location;
 
-    @OneToOne(mappedBy = "bicycle_id")
+  @OneToOne(mappedBy = "bicycle")
     private Reservation reservation;
 }

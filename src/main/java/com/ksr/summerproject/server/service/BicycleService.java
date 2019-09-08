@@ -17,7 +17,7 @@ public interface BicycleService {
 
     Bicycle rentBicycle(int id) throws BicycleNotFoundException, BicycleDeactivatedException, BicycleOccupiedException;
 
-    void returnBicycle(int id) throws BicycleNotFoundException, BicycleNotActiveException;
+    void returnBicycle(int id) throws BicycleNotFoundException, BicycleNotOccupiedException;
 
     void deactivateBicycle(int id) throws BicycleNotFoundException;
 
