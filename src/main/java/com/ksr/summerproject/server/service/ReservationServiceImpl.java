@@ -6,10 +6,12 @@ import com.ksr.summerproject.server.model.Client;
 import com.ksr.summerproject.server.model.Reservation;
 import com.ksr.summerproject.server.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
+@Transactional(timeout = 5)
 public class ReservationServiceImpl implements ReservationService {
 
     private final ClientService clientService;

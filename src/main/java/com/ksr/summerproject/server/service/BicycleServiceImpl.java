@@ -4,11 +4,13 @@ import com.ksr.summerproject.server.exceptions.*;
 import com.ksr.summerproject.server.model.Bicycle;
 import com.ksr.summerproject.server.repository.BicycleRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(timeout = 5)
 public class BicycleServiceImpl implements BicycleService {
 
     private final BicycleRepository bicycleRepository;
@@ -22,8 +24,6 @@ public class BicycleServiceImpl implements BicycleService {
         Bicycle bicycle = new Bicycle();
         bicycle.setStatus(ACTIVE);
         bicycle.setLocation(location);
-
-        bicycleRepository.save(bicycle);
     }
 
     @Override
@@ -36,7 +36,6 @@ public class BicycleServiceImpl implements BicycleService {
                 throw new BicycleOccupiedException("Bicycle of id: " + id + " already occupied");
             } else {
                 foundBicycle.get().setStatus(OCCUPIED);
-                bicycleRepository.save(foundBicycle.get());
                 return foundBicycle.get();
             }
         } else {
@@ -52,7 +51,6 @@ public class BicycleServiceImpl implements BicycleService {
                 throw new BicycleNotOccupiedException("Bicycle has been already returned.");
             }
             bicycle.get().setStatus(ACTIVE);
-            bicycleRepository.save(bicycle.get());
         } else {
             throw new BicycleNotFoundException("Bicycle of id: " + id + " was not found.");
         }
@@ -63,7 +61,6 @@ public class BicycleServiceImpl implements BicycleService {
         Optional<Bicycle> bicycle = bicycleRepository.findById(id);
         if(bicycle.isPresent()) {
             bicycle.get().setStatus(DEACTIVATED);
-            bicycleRepository.save(bicycle.get());
         } else {
             throw new BicycleNotFoundException("Bicycle of id: " + id + " does not exist");
         }
